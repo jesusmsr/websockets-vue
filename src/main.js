@@ -3,8 +3,9 @@ import * as VueRouter from 'vue-router';
 
 import App from './App.vue'
 import ChatComponent from './components/ChatComponent.vue';
-import UserAuth from './components/UserAuth.vue';
-import LoginComponent from './components/LoginComponent.vue';
+import PlayComponent from './components/PlayComponent.vue';
+import CardsComponent from './components/CardsComponent.vue';
+import MainComponent from './components/MainPage.vue';
 
 
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -13,20 +14,23 @@ import "bootstrap"
 
 const routes = [
     {
+        path: '/',
+        redirect: '/main'
+    },
+    {
+        path: '/main',
+        name: 'Main',
+        component: MainComponent
+    },
+    {
         path: '/chats',
         name: 'Chat',
         component: ChatComponent
     },
-
     {
-        path: '/auth',
-        name: 'UserAuth',
-        component: UserAuth
-    },
-    {
-        path: '/login',
-        name: 'LoginComponent',
-        component: LoginComponent
+        path: '/play/:code',
+        name: 'MainComponent',
+        component: PlayComponent
     }
 ]
 
@@ -35,17 +39,10 @@ const router = new VueRouter.createRouter({
     routes
 });
 
-router.beforeEach(async (to) => {
-    const publicPages = ['/login', '/auth'];
-    const authRequired = !publicPages.includes(to.path);
-    const isAuth = localStorage.getItem('authToken');
+const app = Vue.createApp(App);
+app.use(router);
 
-    console.log(authRequired);
-    if (authRequired && !isAuth) {
-        return '/login'
-    }
+app.component('cards-component', CardsComponent);
 
-});
-
-Vue.createApp(App).use(router).mount('#app');
+app.mount('#app');
 
